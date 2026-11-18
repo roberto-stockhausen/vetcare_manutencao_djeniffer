@@ -15,10 +15,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 $titulo=$id?'Editar tutor':'Novo tutor';include __DIR__.'/../includes/header.php';
 ?>
 <h1><?=$titulo?></h1><section class="panel">
-<?php if($erro):?><div class="alert"><?=$erro?></div><?php endif;?>
+<?php if($erro):?><div class="alert"><?=$erro?></div><?php endif;?>s
 <form method="post">
 <div class="field"><label>Nome *</label><input name="nome" value="<?=htmlspecialchars($r['nome'])?>" required></div>
-<div class="field"><label>Telefone</label><input name="telefone" value="<?=htmlspecialchars($r['telefone'])?>"></div>
+<div class="field"><label>Telefone</label><input name="telefone" inputmode="numeric" pattern="[0-9]{10,11}" minlength="10" maxlength="11" value="<?=htmlspecialchars($r['telefone'])?>"></div>
 <div class="field"><label>E-mail</label><input type="email" name="email" value="<?=htmlspecialchars($r['email'])?>"></div>
 <div class="field"><label>Endereço</label><input name="endereco" value="<?=htmlspecialchars($r['endereco'])?>"></div>
 <?php if($id):?><div class="field"><label>Situação</label><select name="ativo"><option value="1" <?=$r['ativo']?'selected':''?>>Ativo</option><option value="0" <?=!$r['ativo']?'selected':''?>>Inativo</option></select></div><?php endif;?>
