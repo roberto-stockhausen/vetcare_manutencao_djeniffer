@@ -1,17 +1,20 @@
 <?php
 require_once __DIR__.'/../config/database.php';require_once __DIR__.'/../config/auth.php';exigirLogin();
+if (isset($_GET['erro'])) {$erro = true;}
 $id=(int)($_GET['id']??0);$r=['animal_id'=>'','data_consulta'=>'','veterinario'=>'','motivo'=>'','status'=>'Agendada','observacoes'=>''];
 if($id){$s=$pdo->prepare("SELECT * FROM consultas WHERE id=?");$s->execute([$id]);$r=$s->fetch()?:$r;}
 $animais=$pdo->query("SELECT id,nome FROM animais ORDER BY nome")->fetchAll();$erro='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
  $data=$_POST['data_consulta']??'';$dt=str_replace('T',' ',$data).(strlen($data)===16?':00':'');
+ if( strtotime($dt) > strtotime('now') ) {
  if(trim($_POST['veterinario']??'')==='')$erro='Informe o veterinário.';
  else{
   $dados=[(int)$_POST['animal_id'],$dt,$_POST['veterinario'],$_POST['motivo'],$_POST['status'],$_POST['observacoes']];
   if($id){$s=$pdo->prepare("UPDATE consultas SET animal_id=?,data_consulta=?,veterinario=?,motivo=?,status=?,observacoes=? WHERE id=?");$s->execute([...$dados,$id]);}
   else{$s=$pdo->prepare("INSERT INTO consultas(animal_id,data_consulta,veterinario,motivo,status,observacoes) VALUES(?,?,?,?,?,?)");$s->execute($dados);}
-  header('Location: index.php');exit;
  }
+  header('Location: index.php');exit;
+ } else {header('Location: form.php?dateerror=1');}
 }
 $titulo=$id?'Editar consulta':'Nova consulta';include __DIR__.'/../includes/header.php';?>
 <h1><?=$titulo?></h1><section class="panel"><?php if($erro):?><div class="alert"><?=$erro?></div><?php endif;?>
