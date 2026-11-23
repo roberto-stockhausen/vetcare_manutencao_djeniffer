@@ -1,5 +1,5 @@
 <?php
-require_once '../config/database.php';
+require_once '../config/database.php'; /* Nova página inteira */
 require_once '../config/auth.php';
 exigirLogin();
 $titulo='Painel';

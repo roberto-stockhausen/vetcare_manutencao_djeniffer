@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__.'/../config/database.php';require_once __DIR__.'/../config/auth.php';exigirLogin();
-if (isset($_GET['dateerror'])) {$dateerror = 1;}
+if (isset($_GET['dateerror'])) {$dateerror = 1;}  /* <- Pega o dado de data de nascimento inválida */
 $id=(int)($_GET['id']??0);$r=['animal_id'=>'','data_consulta'=>'','veterinario'=>'','motivo'=>'','status'=>'Agendada','observacoes'=>''];
 if($id){$s=$pdo->prepare("SELECT * FROM consultas WHERE id=?");$s->execute([$id]);$r=$s->fetch()?:$r;}
 $animais=$pdo->query("SELECT id,nome FROM animais ORDER BY nome")->fetchAll();$erro='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
  $data=$_POST['data_consulta']??'';$dt=str_replace('T',' ',$data).(strlen($data)===16?':00':'');
- if( strtotime($dt) > strtotime('now') ) {
+ if( strtotime($dt) > strtotime('now') ) {  /* <- Checa a validade da data */
  if(trim($_POST['veterinario']??'')==='')$erro='Informe o veterinário.';
  else{
   $dados=[(int)$_POST['animal_id'],$dt,$_POST['veterinario'],$_POST['motivo'],$_POST['status'],$_POST['observacoes']];
@@ -14,11 +14,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   else{$s=$pdo->prepare("INSERT INTO consultas(animal_id,data_consulta,veterinario,motivo,status,observacoes) VALUES(?,?,?,?,?,?)");$s->execute($dados);}
  }
   header('Location: index.php');exit;
- } else {header('Location: form.php?dateerror=1');}
+ } else {header('Location: form.php?dateerror=1');}  /* <- Reinicia a página com dateerror declarado */
 }
 $titulo=$id?'Editar consulta':'Nova consulta';include __DIR__.'/../includes/header.php';?>
 <h1><?=$titulo?></h1><section class="panel"><?php if($erro):?><div class="alert"><?=$erro?></div><?php endif;?>
-    <?php if (isset($dateerror)) { ?> <div class="alert"> Data de cadastro inválida! Insira uma data futura. </div> <?php } ?>
+    <?php if (isset($dateerror)) { ?> <div class="alert"> Data de cadastro inválida! Insira uma data futura. </div> <?php } ?>  /* <- Linha que mostra o erro */
 <form method="post"><div class="field"><label>Animal</label><select name="animal_id" required><option value="">Selecione</option><?php foreach($animais as $a):?><option value="<?=$a['id']?>" <?=$r['animal_id']==$a['id']?'selected':''?>><?=htmlspecialchars($a['nome'])?></option><?php endforeach;?></select></div>
 <div class="field"><label>Data e horário</label><input type="datetime-local" name="data_consulta" value="<?=$r['data_consulta']?date('Y-m-d\TH:i',strtotime($r['data_consulta'])):''?>" required></div>
 <div class="field"><label>Veterinário *</label><input name="veterinario" value="<?=htmlspecialchars($r['veterinario'])?>" required></div>

@@ -2,7 +2,7 @@
 require_once __DIR__.'/../config/database.php'; require_once __DIR__.'/../config/auth.php'; exigirLogin();
 $titulo='Tutores';
 $busca=trim($_GET['busca']??'');
-if (isset($_GET['erro'])){$erro = $_GET['erro'];}
+if (isset($_GET['erro'])){$erro = $_GET['erro'];} /* Declara erro */
 $sql="SELECT * FROM tutores WHERE nome LIKE ?";
 $param=['%'.(explode(' ',$busca)[0]).'%']; 
 if($busca===''){ $sql="SELECT * FROM tutores"; $param=[]; }
@@ -18,3 +18,9 @@ include __DIR__.'/../includes/header.php';
 <?php if (isset($erro) && ($erro==1)) {echo 'erro ao excluír tutor: Há um animal vinculado a ele';}?>
 </div>
 <?php include __DIR__.'/../includes/footer.php'; ?>
+<script>
+/* function testeErro(event) {
+    event.preventDefault();
+    alert("Teste - Erro ao tentar cadastrar tutor. Tente novamente mais tarde.");
+} Função removida */ 
+</script>
