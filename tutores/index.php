@@ -15,12 +15,12 @@ include __DIR__.'/../includes/header.php';
 <div class="panel table-wrap"><table><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Estado</th><th>Ações</th></tr>
 <?php foreach($rows as $r): ?><tr><td><?=htmlspecialchars($r['nome'])?></td><td><?=htmlspecialchars($r['telefone'])?></td><td><?=htmlspecialchars($r['email'])?></td><td><?=$r['ativo']?'Ativo':'Inativo'?></td><td><a href="form.php?id=<?=$r['id']?>">Editar</a> | <a href="excluir.php?id=<?=$r['id']?>">Excluir</a></td></tr><?php endforeach;?>
 </table>
-<?php if (isset($erro) && ($erro==1)) {echo 'erro ao excluír tutor: Há um animal vinculado a ele';}?>
+<?php if (isset($erro) && ($erro==1)) {echo 'erro ao excluír tutor: Há um animal vinculado a ele';}?> <!-- Mostra mensagem de erro se erro for declarado no GET -->
 </div>
 <?php include __DIR__.'/../includes/footer.php'; ?>
 <script>
 /* function testeErro(event) {
     event.preventDefault();
     alert("Teste - Erro ao tentar cadastrar tutor. Tente novamente mais tarde.");
-} Função removida */ 
+} Função removida que não fazia nada senão cancelar o cadastro.*/ 
 </script>

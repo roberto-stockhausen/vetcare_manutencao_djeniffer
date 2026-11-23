@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__.'/../config/database.php';require_once __DIR__.'/../config/auth.php';exigirLogin();
 $titulo='Consultas';$status=$_GET['status']??'';
-if ($_GET['status'] != ""){
+if ($_GET['status'] != ""){ /* <- Adicionado um GET para o status para o sistema de filtro funcionar. */ 
 $sql="SELECT c.*,a.nome AS animal FROM consultas c JOIN animais a ON a.id=c.animal_id WHERE status='$status'";
 }
-else {$sql="SELECT c.*,a.nome AS animal FROM consultas c JOIN animais a ON a.id=c.animal_id";}
+else {$sql="SELECT c.*,a.nome AS animal FROM consultas c JOIN animais a ON a.id=c.animal_id";} /* <- Apenas executa o query de todos se status for vazio. */
+/* $sql="SELECT c.*,a.nome AS animal FROM consultas c JOIN animais a ON a.id=c.animal_id"; Antes, não havia else.*/ 
 $rows=$pdo->query($sql." ORDER BY c.data_consulta DESC")->fetchAll(); 
 include __DIR__.'/../includes/header.php';?>
 <h1>Consultas</h1><p class="muted">Agenda e histórico de atendimentos.</p><div class="actions"><a class="btn" href="form.php">+ Nova consulta</a></div>
